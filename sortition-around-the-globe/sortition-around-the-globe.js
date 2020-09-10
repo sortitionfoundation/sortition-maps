@@ -14,7 +14,6 @@ function initMap() {
           maxWidth: 300
         });
 
-        /* Markers below only go to 2022 !!! */
         // Pull locations2 from spreadsheet:
         var url = "https://sheets.googleapis.com/v4/spreadsheets/1kwgOpxMX4pwR3Myu4pXku4gjcnOS53bPOKwOGjZNxyI/values/OECD!A2:BL?majorDimension=ROWS&valueRenderOption=FORMULA"
         var API_KEY = "INSERT KEY HERE. ASK DAVID OR SOMEONE ELSE WHO KNOWS."
@@ -56,35 +55,24 @@ function initMap() {
         }
 
         var markers2 = [];
-        var markercolours = [];
-        markercolours[2022] = "bcb716"; //mustardy
-        markercolours[2021] = "819e0c"; //weirdo green
-        markercolours[2020] = "ffff38"; //yellow
-        markercolours[2019] = "f44141"; //crazy red?
-        markercolours[2018] = "a6f441"; //light green
-        markercolours[2017] = "FE7569"; //red
-        markercolours[2016] = "f4f142";  //yellow
-        markercolours[2015] = "41f444"; //green
-        markercolours[2014] = "f141f4";  //pink
-        markercolours[2013] = "41ebf4"; //light blue
-        markercolours[2012] = "8541f4"; //purple
-        markercolours[2011] = "a6f441"; //light green
-        markercolours[2010] = "f44141"; // full red
-        markercolours[2009] = "4161f4"; //dark blue
-        markercolours[2008] = "c741f4"; //pinkish-purple
-        markercolours[2007] = "a3f441"; //lime
-        markercolours[2006] = "0f630a"; //another green -dark
-        markercolours[2005] = "f48841"; //orange
-        markercolours[2004] = "bcb716"; //mustardy
-        markercolours[2003] = "819e0c"; //weirdo green
-        markercolours[2002] = "ffff38"; //yellow
-        markercolours[2001] = "f44141"; //crazy red?
-        markercolours[2000] = "0d1066"; //darkish purple
+
+        function rgbToHex(r, g, b) {
+          return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+        }
+
+        function yearToColour(year) {
+          var age = Math.abs(new Date() - new Date(year,1));
+          var maxAge = 1.6e12;
+          var r = Math.ceil(255*age/maxAge);
+          var g = Math.floor(255*(maxAge-age)/maxAge);
+          document.write("year: " + year + ", maxAge: " + maxAge + ", age: " + age);
+          return rgbToHex(r, g, 0);
+        }
 
        for (i = 0; i < locations2.length; i++) {
          if (isNaN(locations2[i].lat)) {continue;}
          var mylabel = locations2[i].year.toString().substring(2);
-         var myicon = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + mylabel + "|" + markercolours[locations2[i].year];
+         var myicon = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + mylabel + "|" + yearToColour(locations2[i].year);
          var mark = new google.maps.Marker({
            position: { lat: locations2[i].lat, lng: locations2[i].lng },
            title: locations2[i].title,

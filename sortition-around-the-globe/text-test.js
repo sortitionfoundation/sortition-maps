@@ -37,10 +37,23 @@ for (i = 0; i < data.values.length; i++) {
   locations2.push(Object.assign({}, newEntry));
 }
 
+function rgbToHex(r, g, b) {
+  return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+}
+
+function yearToColour(year) {
+  var age = Math.abs(new Date() - new Date(year,1));
+  var maxAge = 1.6e12;
+  var r = Math.ceil(255*age/maxAge);
+  var g = Math.floor(255*(maxAge-age)/maxAge);
+  document.write("year: " + year + ", maxAge: " + maxAge + ", age: " + age);
+  return rgbToHex(r, g, 0);
+}
 
 // Test output
 var content;
 for (i = 0; i < locations2.length; i++) {
+  document.write("<h3 style='color:" + yearToColour(locations2[i].year) + "';>" + locations2[i].year + "</h3>");
   if (isNaN(locations2[i].lat)) {continue;}
   content = "<h3>" + locations2[i].title + "</h3>" + "<b>" + locations2[i].year + ", " + locations2[i].loc + ".</b> " +
       locations2[i].desc;
