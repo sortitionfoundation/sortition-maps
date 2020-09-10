@@ -44,8 +44,8 @@ function rgbToHex(r, g, b) {
 function yearToColour(year) {
   var age = Math.abs(new Date() - new Date(year,1));
   var maxAge = 1.6e12;
-  var r = Math.ceil(255*age/maxAge);
-  var g = Math.floor(255*(maxAge-age)/maxAge);
+  var r = Math.max(0, Math.min(255, Math.ceil(255*age/maxAge)));
+  var g = Math.max(0, Math.min(255, Math.floor(255*(maxAge-age)/maxAge)));
   document.write("year: " + year + ", maxAge: " + maxAge + ", age: " + age);
   return rgbToHex(r, g, 0);
 }
