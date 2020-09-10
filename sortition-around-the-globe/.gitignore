@@ -1,0 +1,2 @@
+# Store API key in an ignored file, so that it is not shared.
+api-key.js 
