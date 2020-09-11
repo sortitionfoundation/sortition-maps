@@ -75,8 +75,7 @@ function initMap() {
          var myicon = "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + mylabel + "|" + yearToColour(locations2[i].year);
          var mark = new google.maps.Marker({
            position: { lat: locations2[i].lat, lng: locations2[i].lng },
-           title: locations2[i].title,
-           icon: myicon
+           title: locations2[i].title
           });
          var content = "<h3>" + locations2[i].title + "</h3>" + "<b>" + locations2[i].year + ", " + locations2[i].loc + ".</b> " +
              locations2[i].desc;
