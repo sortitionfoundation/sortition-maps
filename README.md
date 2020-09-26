@@ -9,3 +9,4 @@ Code to generate maps of sortition activities, for the Sortition Foundation webs
 	* test.html: An html file used to run text-test.js
 	* add_latlng_to_OECD.py: Python script used to augment the OECD database with latitude and longitude data.
 	* OECD.csv: A copy of the OECD's database of deliberative democracy activities.
+	* generate_gif.py: Produces the frames for an animation of sortition events spreading around the world over recent years.
