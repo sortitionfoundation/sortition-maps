@@ -1,3 +1,13 @@
+""" Generate the frames for an animation showing sortition events accumulating around the globe
+over recent years.
+
+N.B. To run this script you will need to add your own credentials.json file to the working
+directory. This file can be created in the Google Developer Console.
+
+Created by David Western, Sep 2020.
+"""
+
+
 from __future__ import print_function
 import pickle
 import os.path
