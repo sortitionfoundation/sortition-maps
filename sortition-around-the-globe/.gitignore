@@ -1,2 +1,9 @@
 # Store API key in an ignored file, so that it is not shared.
 api-key.js 
+
+.idea/
+
+# Files created by/for generate_gif.py
+frames/*
+token.pickle
+credentials.json
