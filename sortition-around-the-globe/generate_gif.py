@@ -152,5 +152,5 @@ if __name__ == '__main__':
     fig = plt.figure(figsize=(19.2, 10.8))
     for year in range(start_year,end_year):
         make_map(data,year,fig)
-    fig.close()
+    plt.close(fig)
     make_gif()
