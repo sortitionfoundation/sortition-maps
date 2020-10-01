@@ -4,5 +4,17 @@
     "__source__": "https://neo.sci.gsfc.nasa.gov/view.php?datasetId=BlueMarbleNG-TB",
     "__projection__": "PlateCarree",
     "low": "BM_low.jpeg",
-    "high": "BM.png"}
+    "high": "BM.png"},
+  "BW": {
+    "__comment__": "Black and white",
+    "__source__": "https://neo.sci.gsfc.nasa.gov/view.php?datasetId=MOD_LSTD_CLIM_M",
+    "__projection__": "PlateCarree",
+    "low": "BW.png",
+    "high": "BW.png"},
+  "BG": {
+    "__comment__": "Black and grey",
+    "__source__": "https://neo.sci.gsfc.nasa.gov/view.php?datasetId=MOD_LSTD_CLIM_M",
+    "__projection__": "PlateCarree",
+    "low": "BG.png",
+    "high": "BG.png"}
 }

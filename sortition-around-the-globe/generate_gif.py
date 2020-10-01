@@ -17,6 +17,7 @@ from google.auth.transport.requests import Request
 
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
+import numpy as np
 
 import os
 
@@ -28,6 +29,15 @@ SAMPLE_SPREADSHEET_ID = '1kwgOpxMX4pwR3Myu4pXku4gjcnOS53bPOKwOGjZNxyI'
 SAMPLE_RANGE_NAME = 'OECD!A1:BL'
 
 os.environ["CARTOPY_USER_BACKGROUNDS"] = "background"
+
+res = 'high'
+dpi = {'high':600, 'low':100}
+
+start_year = 1990
+end_year = 2021
+
+colour1 = '720046'
+colour2 = 'fd5734'
 
 def get_data():
     """Shows basic usage of the Sheets API.
@@ -69,22 +79,28 @@ def make_map(data,year_to_plot):
     ax = plt.axes(projection=ccrs.Mercator(central_longitude=0,
                                            min_latitude=-60,
                                            max_latitude=70))
-    ax.background_img(name='BM', resolution='high')
+    ax.background_img(name='BG', resolution=res)
     ax.set_extent([-170, 179, -60, 70], crs=ccrs.PlateCarree())
 
     years = []
     lats = []
     longs = []
+    colrs = np.empty((0,3))
     for row in data:
         try:
             if len(row) > 63 and float(row[12]) <= year_to_plot:
-                years.append(float(row[12]))
+                year = float(row[12])
+                years.append(year)
+                colrs = np.append(colrs, year_to_colour(year), axis=0)
                 lats.append(float(row[62]))
                 longs.append(float(row[63]))
         except:
             pass
 
-    ax.scatter(longs, lats, color='#fd5734', transform=ccrs.PlateCarree())
+    alpha = 0.6
+    rgba = np.ones((len(years), 4))*alpha
+    rgba[:, :-1] = colrs
+    ax.scatter(longs, lats, color=rgba, s=100, transform=ccrs.PlateCarree())
 
     fontname = 'Open Sans'
     fontsize = 28
@@ -92,21 +108,30 @@ def make_map(data,year_to_plot):
     date_x = -9
     date_y = -50
     # Date text
+    colr = year_to_colour(year_to_plot)
+    colr = (colr[0][0], colr[0][1], colr[0][2])
     ax.text(date_x, date_y,
             f"{year_to_plot:04d}",
-            color='#fd5734',
+            color=colr,
             fontname=fontname, fontsize=fontsize * 1.3,
             transform=ccrs.PlateCarree())
     # Expands image to fill the figure and cut off margins
-    fig.tight_layout(pad=-0.5)
+    # fig.tight_layout(pad=-0.5)
 
-    fig.savefig(f"frames/{year_to_plot:04d}.png", dpi=100,
-                frameon=False, facecolor='black')
+    fig.savefig(f"frames/{year_to_plot:04d}.png", dpi=dpi[res],
+                facecolor='black')
     ax.clear()
 
+def hex_to_rgb(hex):
+    return np.array([[int(hex[i:i + 2], 16)/255 for i in (0, 2, 4)]])
 
+def year_to_colour(year):
+    rgb1 = hex_to_rgb(colour1)
+    rgb2 = hex_to_rgb(colour2)
+    year = max(year,start_year)
+    return rgb1 + (year - start_year) / (end_year - start_year) * (rgb2 - rgb1)
 
 if __name__ == '__main__':
     data = get_data()
-    for year in range(1990,2021):
+    for year in range(start_year,end_year):
         make_map(data,year)
