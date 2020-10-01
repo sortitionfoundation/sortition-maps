@@ -3,8 +3,10 @@ api-key.js
 
 .idea/
 
+__pycache__
+
 # Files created by/for generate_gif.py
 frames/*
 token.pickle
 credentials.json
-map.gif
+*.gif

@@ -30,8 +30,8 @@ SAMPLE_RANGE_NAME = 'OECD!A1:BL'
 
 os.environ["CARTOPY_USER_BACKGROUNDS"] = "background"
 
-res = 'high'
-dpi = {'high':600, 'low':100}
+res = 'low'
+dpi = {'high':100, 'low':50}
 
 start_year = 1990
 end_year = 2021
@@ -73,9 +73,8 @@ def get_data():
     return values
 
 
-def make_map(data,year_to_plot):
+def make_map(data, year_to_plot, fig):
 
-    fig = plt.figure(figsize=(19.2, 10.8))
     ax = plt.axes(projection=ccrs.Mercator(central_longitude=0,
                                            min_latitude=-60,
                                            max_latitude=70))
@@ -131,7 +130,27 @@ def year_to_colour(year):
     year = max(year,start_year)
     return rgb1 + (year - start_year) / (end_year - start_year) * (rgb2 - rgb1)
 
+def make_gif():
+    from pathlib import Path
+    from PIL import Image, ImageFilter
+
+    # Load images
+    images = []
+    pathlist = Path('frames').glob('**/*.png')
+    for path in pathlist:
+        images.append(Image.open(path))
+    # Repeat the last frame so it stays up a while
+    for k in range(5):
+        images.append(Image.open(path))
+    # Save to gif file
+    images[0].save('gifs/map.gif',
+                   save_all=True, append_images=images[1:], optimize=True, duration=500, loop=0)
+
+
 if __name__ == '__main__':
     data = get_data()
+    fig = plt.figure(figsize=(19.2, 10.8))
     for year in range(start_year,end_year):
-        make_map(data,year)
+        make_map(data,year,fig)
+    fig.close()
+    make_gif()
