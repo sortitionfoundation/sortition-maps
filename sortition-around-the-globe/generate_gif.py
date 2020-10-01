@@ -100,7 +100,7 @@ def make_map(data,year_to_plot):
     alpha = 0.6
     rgba = np.ones((len(years), 4))*alpha
     rgba[:, :-1] = colrs
-    ax.scatter(longs, lats, color=rgba, s=100, transform=ccrs.PlateCarree())
+    ax.scatter(longs, lats, color=rgba, s=100, edgecolors='none', transform=ccrs.PlateCarree())
 
     fontname = 'Open Sans'
     fontsize = 28
