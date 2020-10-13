@@ -17,6 +17,7 @@ from google.auth.transport.requests import Request
 
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
+import cartopy
 import numpy as np
 
 import os
@@ -30,11 +31,18 @@ SAMPLE_RANGE_NAME = 'OECD!A1:BL'
 
 os.environ["CARTOPY_USER_BACKGROUNDS"] = "background"
 
+bg_map = 'cartopy'
 res = 'low'
-dpi = {'high':100, 'low':50}
+if bg_map is 'cartopy':
+    dpi = {'high':100, 'low':50}
+    stock_img = True
+    marker_size = 400
+else:
+    dpi = {'high':100, 'low':50}
+    marker_size = 400
 
 start_year = 1990
-end_year = 2021
+end_year = 2020
 
 colour1 = '720046'
 colour2 = 'fd5734'
@@ -75,11 +83,28 @@ def get_data():
 
 def make_map(data, year_to_plot, fig):
 
-    ax = plt.axes(projection=ccrs.Mercator(central_longitude=0,
-                                           min_latitude=-60,
-                                           max_latitude=70))
-    ax.background_img(name='BG', resolution=res)
-    ax.set_extent([-170, 179, -60, 70], crs=ccrs.PlateCarree())
+    if bg_map is 'cartopy':
+        extent = [-179.9, 179.9, -58, 70]
+
+        proj = ccrs.PlateCarree()
+
+        ax = plt.axes((0,0,1,1), projection=proj)
+        ax.set_extent(extent, crs=proj)
+        ax.set_aspect('auto')
+
+        if stock_img:
+            ax.stock_img()
+        ax.coastlines(linewidth=0.1)
+        ax.add_feature(cartopy.feature.OCEAN, facecolor='#a3d1fd')
+        ax.add_feature(cartopy.feature.LAND, facecolor='#bbdf91')
+        ax.add_feature(cartopy.feature.BORDERS, linewidth=0.2)
+    else:
+        proj = ccrs.Mercator(central_longitude=0,
+                      min_latitude=-60,
+                      max_latitude=70)
+        ax = plt.axes((0,0,1,1), projection=proj)
+        ax.background_img(name=bg_map, resolution=res)
+        ax.set_extent([-170, 179, -60, 70], crs=ccrs.PlateCarree())
 
     years = []
     lats = []
@@ -99,23 +124,26 @@ def make_map(data, year_to_plot, fig):
     alpha = 0.6
     rgba = np.ones((len(years), 4))*alpha
     rgba[:, :-1] = colrs
-    ax.scatter(longs, lats, color=rgba, s=100, edgecolors='none', transform=ccrs.PlateCarree())
+    ax.scatter(longs, lats, color=rgba, s=marker_size, edgecolors='none',
+               transform=ccrs.PlateCarree())
 
     fontname = 'Open Sans'
-    fontsize = 28
+    fontsize = 128
     # Positions for the date and grad counter
-    date_x = -9
-    date_y = -50
+    date_x = -30
+    date_y = 0
     # Date text
     colr = year_to_colour(year_to_plot)
     colr = (colr[0][0], colr[0][1], colr[0][2])
+    for txt in ax.texts:
+        txt.set_visible(False)
     ax.text(date_x, date_y,
             f"{year_to_plot:04d}",
             color=colr,
-            fontname=fontname, fontsize=fontsize * 1.3,
+            fontname=fontname, fontsize=fontsize,
             transform=ccrs.PlateCarree())
     # Expands image to fill the figure and cut off margins
-    # fig.tight_layout(pad=-0.5)
+    fig.tight_layout(pad=-0.5)
 
     fig.savefig(f"frames/{year_to_plot:04d}.png", dpi=dpi[res],
                 facecolor='black')
@@ -144,13 +172,13 @@ def make_gif():
         images.append(Image.open(path))
     # Save to gif file
     images[0].save('gifs/map.gif',
-                   save_all=True, append_images=images[1:], optimize=True, duration=500, loop=0)
+                   save_all=True, append_images=images[1:], optimize=True, duration=1000, loop=0)
 
 
 if __name__ == '__main__':
     data = get_data()
-    fig = plt.figure(figsize=(19.2, 10.8))
-    for year in range(start_year,end_year):
+    fig = plt.figure(figsize=(23.9,10))
+    for year in range(start_year,end_year+1):
         make_map(data,year,fig)
     plt.close(fig)
     make_gif()

@@ -16,5 +16,11 @@
     "__source__": "https://neo.sci.gsfc.nasa.gov/view.php?datasetId=MOD_LSTD_CLIM_M",
     "__projection__": "PlateCarree",
     "low": "BG.png",
-    "high": "BG.png"}
+    "high": "BG.png"},
+  "BlueGreen": {
+    "__comment__": "Black and grey",
+    "__source__": "https://neo.sci.gsfc.nasa.gov/view.php?datasetId=MOD_LSTD_CLIM_M",
+    "__projection__": "PlateCarree",
+    "low": "BlueGreen.png",
+    "high": "BlueGreen.png"}
 }
