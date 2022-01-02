@@ -7,8 +7,12 @@
 
 import pandas as pd
 from geopy.extra.rate_limiter import RateLimiter
-from geopy.geocoders import Nominatim
 from numpy.random import rand
+import ssl
+import certifi
+import geopy.geocoders
+ctx = ssl.create_default_context(cafile=certifi.where())
+geopy.geocoders.options.default_ssl_context = ctx
 
 fileIn = 'OECD.csv'
 fileOut = 'OECD2.csv'
@@ -21,10 +25,10 @@ df = pd.read_csv(fileIn)
 df['place'] = df[cityCol]+", "+df[countryCol]
 
 # Get lat/lng data using geopy
-locator = Nominatim(user_agent='myGeocoder')
+locator = geopy.geocoders.Nominatim(user_agent='myGeocoder')
 locations = df['place'].apply(locator.geocode)
 points = locations.apply(lambda loc: tuple(loc.point) if loc else None)
-df[['lat', 'lng', 'altitude']] = pd.DataFrame(points.tolist(), index=df.index)
+df[['latitude', 'longitude', 'altitude']] = pd.DataFrame(points.tolist(), index=df.index)
 # df['latitude'] = rand(len(df),1)
 # df['longitude'] = rand(len(df),1)
 
