@@ -27,13 +27,13 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
 # The ID and range of a sample spreadsheet.
 SAMPLE_SPREADSHEET_ID = '1kwgOpxMX4pwR3Myu4pXku4gjcnOS53bPOKwOGjZNxyI'
-SAMPLE_RANGE_NAME = 'OECD!A1:BL'
+SAMPLE_RANGE_NAME = 'OECD!A1:BO'
 
 os.environ["CARTOPY_USER_BACKGROUNDS"] = "background"
 
 bg_map = 'cartopy'
 res = 'low'
-if bg_map is 'cartopy':
+if bg_map == 'cartopy':
     dpi = {'high':100, 'low':50}
     stock_img = True
     marker_size = 400
@@ -42,7 +42,7 @@ else:
     marker_size = 400
 
 start_year = 1990
-end_year = 2020
+end_year = 2021
 
 colour1 = '720046'
 colour2 = 'fd5734'
@@ -83,7 +83,7 @@ def get_data():
 
 def make_map(data, year_to_plot, fig):
 
-    if bg_map is 'cartopy':
+    if bg_map == 'cartopy':
         extent = [-179.9, 179.9, -58, 70]
 
         proj = ccrs.PlateCarree()
